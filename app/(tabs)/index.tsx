@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
@@ -46,10 +45,9 @@ const DrawerNavigator = () => (
 );
 
 export default function App() {
+  // Assuming that NavigationContainer is already handled at a higher level (e.g. expo-router)
   return (
-    <NavigationContainer>
-      {Platform.OS === 'ios' ? <TabNavigator /> : <DrawerNavigator />}
-    </NavigationContainer>
+    Platform.OS === 'ios' ? <TabNavigator /> : <DrawerNavigator />
   );
 }
 
