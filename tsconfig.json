@@ -1,21 +1,21 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "expo/tsconfig.base", 
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": "./",
+    "strict": true, // Enforces strict type checking, great for catching bugs
+    "baseUrl": "./", // Set base directory for non-relative module imports
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"] // Path alias configuration (maps '@' to root directory)
     }
   },
   "include": [
-    "app",
-    "components",
-    "hooks",
-    "assets",
-    "App.tsx",
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "app", // Include your app folder for types
+    "components", // Include components folder for types
+    "hooks", // Include hooks folder for types
+    "assets", // Include assets for type support if necessary
+    "App.tsx", // Ensure App.tsx is part of the type checking
+    "**/*.ts", // Include all .ts files for type checking
+    "**/*.tsx", // Include all .tsx files for type checking
+    ".expo/types/**/*.ts", // Include Expo-specific types
+    "expo-env.d.ts" // Include the Expo environment type definitions
   ]
 }
