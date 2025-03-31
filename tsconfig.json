@@ -4,12 +4,14 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"]  
+      "@/*": ["./*"]
     }
   },
   "include": [
     "app",
     "components",
+    "hooks",
+    "assets",
     "App.tsx",
     "**/*.ts",
     "**/*.tsx",
@@ -17,4 +19,3 @@
     "expo-env.d.ts"
   ]
 }
-
