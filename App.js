@@ -56,5 +56,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f0f8ff',
+  },
+  screenText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });

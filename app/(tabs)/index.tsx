@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Platform, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Platform,
+  ActivityIndicator,
+  TextInput,
+  Button,
+  Modal,
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import axios from 'axios';
 
-// Fetching data function
+// Reusable fetch function
 const fetchData = async (url: string) => {
   try {
     const response = await axios.get(url);
@@ -15,121 +26,149 @@ const fetchData = async (url: string) => {
   }
 };
 
-// Planets Screen
-const PlanetsScreen = () => {
-  const [planets, setPlanets] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// Reusable Screen Component Factory
+const createScreen = (endpoint: string, itemKey: 'name' | 'title') => {
+  return () => {
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchText, setSearchText] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    fetchData('https://swapi.dev/api/planets/')
-      .then((data) => {
-        setPlanets(data);
+    useEffect(() => {
+      fetchData(endpoint).then((results) => {
+        setData(results);
         setLoading(false);
       });
-  }, []);
+    }, []);
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+    const handleSearch = () => {
+      if (searchText.trim() !== '') {
+        setModalVisible(true);
+      }
+    };
 
-  return (
-    <View style={styles.screenContainer}>
-      <FlatList
-        data={planets}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
-      />
-    </View>
-  );
+    if (loading) {
+      return <ActivityIndicator size="large" color="#FFD700" />;
+    }
+
+    return (
+      <View style={styles.screenContainer}>
+        <TextInput
+          placeholder="Enter a search term..."
+          value={searchText}
+          onChangeText={setSearchText}
+          style={styles.input}
+        />
+        <Button title="Search" onPress={handleSearch} color="#FFD700" />
+
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item[itemKey]}
+          renderItem={({ item }) => <Text style={styles.screenText}>{item[itemKey]}</Text>}
+        />
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>You searched for: "{searchText}"</Text>
+              <Button title="Close" onPress={() => setModalVisible(false)} color="#DC143C" />
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
 };
 
-// Spaceships Screen
-const SpaceshipsScreen = () => {
-  const [spaceships, setSpaceships] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// Screens
+const PlanetsScreen = createScreen('https://swapi.dev/api/planets/', 'name');
+const SpaceshipsScreen = createScreen('https://swapi.dev/api/starships/', 'name');
+const FilmsScreen = createScreen('https://swapi.dev/api/films/', 'title');
 
-  useEffect(() => {
-    fetchData('https://swapi.dev/api/starships/')
-      .then((data) => {
-        setSpaceships(data);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
-
-  return (
-    <View style={styles.screenContainer}>
-      <FlatList
-        data={spaceships}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
-      />
-    </View>
-  );
-};
-
-// Films Screen
-const FilmsScreen = () => {
-  const [films, setFilms] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchData('https://swapi.dev/api/films/')
-      .then((data) => {
-        setFilms(data);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
-
-  return (
-    <View style={styles.screenContainer}>
-      <FlatList
-        data={films}
-        keyExtractor={(item) => item.title}
-        renderItem={({ item }) => <Text>{item.title}</Text>}
-      />
-    </View>
-  );
-};
-
-// Create navigators
+// Navigators
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-// Bottom Tab Navigator (For iOS)
 const TabNavigator = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Planets" component={PlanetsScreen} />
-    <Tab.Screen name="Spaceships" component={SpaceshipsScreen} />
-    <Tab.Screen name="Films" component={FilmsScreen} />
-  </Tab.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen name="Planets" component={PlanetsScreen} />
+      <Tab.Screen name="Spaceships" component={SpaceshipsScreen} />
+      <Tab.Screen name="Films" component={FilmsScreen} />
+    </Tab.Navigator>
 );
 
-// Drawer Navigator (For Android)
 const DrawerNavigator = () => (
-  <Drawer.Navigator>
-    <Drawer.Screen name="Planets" component={PlanetsScreen} />
-    <Drawer.Screen name="Spaceships" component={SpaceshipsScreen} />
-    <Drawer.Screen name="Films" component={FilmsScreen} />
-  </Drawer.Navigator>
+    <Drawer.Navigator>
+      <Drawer.Screen name="Planets" component={PlanetsScreen} />
+      <Drawer.Screen name="Spaceships" component={SpaceshipsScreen} />
+      <Drawer.Screen name="Films" component={FilmsScreen} />
+    </Drawer.Navigator>
 );
 
+// App Entry
 export default function App() {
   return Platform.OS === 'ios' ? <TabNavigator /> : <DrawerNavigator />;
 }
 
+// Styles
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
+    padding: 16,
+    marginTop: 40,
+    backgroundColor: '#000000', // Deep space black background
+  },
+  input: {
+    height: 45,
+    borderColor: '#FFD700', // Star Wars Gold (for a touch of R2-D2’s color)
+    borderWidth: 2,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+    backgroundColor: '#1c1c1c', // Dark background for input field
+    fontSize: 16,
+    color: '#ffffff', // Light text for contrast
+  },
+  modalOverlay: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)', // Darker, more intense overlay
     padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#2f2f2f', // Dark greyish background for the modal
+    padding: 24,
+    borderRadius: 16,
+    elevation: 10,
+    shadowColor: '#FFD700', // Star Wars Gold for the shadow effect
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#DC143C', // Crimson (to reflect the Red Lightsaber)
+  },
+  modalText: {
+    fontSize: 18,
+    color: '#FFD700', // Star Wars Gold
+    fontFamily: 'StarJedi', // Custom Star Wars font (if you have one)
+    marginBottom: 20,
+  },
+  screenText: {
+    fontSize: 20,
+    color: '#FFD700', // Star Wars Gold
+    fontWeight: 'bold',
+    fontFamily: 'StarJedi', // Custom Star Wars font
+    textShadowColor: '#000', 
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 6,
+  },
+  tabBarStyle: {
+    backgroundColor: '#111', // Dark background for the tab bar
+    borderTopColor: '#FFD700', // Gold accents on the tab bar
   },
 });
