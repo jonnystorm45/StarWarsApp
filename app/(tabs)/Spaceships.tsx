@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
@@ -44,7 +44,13 @@ const SpaceshipsScreen = () => {
   }
 
   return (
+  
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://lumiere-a.akamaihd.net/v1/images/databank_millenniumfalcon_01_169_aaae2954.jpeg' }}
+        style={styles.headerImage}
+         resizeMode="cover"
+      />
       <TextInput
         style={styles.input}
         placeholder="Search Spaceships..."
@@ -84,32 +90,38 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     marginTop: 40,
-    backgroundColor: '#000000', // Dark space background
+    backgroundColor: '#000000',
+  },
+  headerImage: {
+    width: '100%',
+    height: 180,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   input: {
     height: 45,
-    borderColor: '#FFD700', // Gold border (Star Wars theme)
+    borderColor: '#FFD700',
     borderWidth: 2,
     paddingHorizontal: 12,
     borderRadius: 8,
     marginBottom: 20,
-    backgroundColor: '#1c1c1c', // Dark input background
+    backgroundColor: '#1c1c1c',
     fontSize: 16,
-    color: '#FFFFFF', // White text
+    color: '#FFFFFF',
   },
   scrollContainer: {
     paddingBottom: 20,
   },
   itemContainer: {
-    backgroundColor: '#333', // Dark background for items
+    backgroundColor: '#333',
     padding: 12,
     marginBottom: 10,
     borderRadius: 8,
   },
   itemText: {
     fontSize: 20,
-    color: '#FFD700', // Gold text color for items
-    fontFamily: 'StarJedi', // Custom Star Wars font (if you have it)
+    color: '#FFD700',
+    fontFamily: 'StarJedi',
     textShadowColor: '#000',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 10,
@@ -117,7 +129,7 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)', // Darker overlay for modals
+    backgroundColor: 'rgba(0,0,0,0.7)',
     padding: 20,
   },
   modalContent: {
@@ -125,27 +137,27 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 16,
     elevation: 10,
-    shadowColor: '#FFD700', // Gold shadow color for modals
+    shadowColor: '#FFD700',
     shadowOpacity: 0.3,
     shadowRadius: 10,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#DC143C', // Crimson border (Dark Side theme)
+    borderColor: '#DC143C',
   },
   modalText: {
     fontSize: 18,
-    color: '#FFFFFF', // White text for modal content
-    fontFamily: 'StarJedi', // Star Wars font for consistency
+    color: '#FFFFFF',
+    fontFamily: 'StarJedi',
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: '#FFD700', // Gold button
+    backgroundColor: '#FFD700',
     padding: 10,
     borderRadius: 8,
   },
   modalButtonText: {
     fontSize: 16,
-    color: '#000000', // Black text for contrast on gold
+    color: '#000000',
     fontWeight: 'bold',
   },
 });

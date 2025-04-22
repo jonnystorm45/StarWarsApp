@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView, Image} from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { Swipeable } from 'react-native-gesture-handler';
@@ -68,6 +68,11 @@ const FilmsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://starwars-visualguide.com/assets/img/films/1.jpg' }} // Image for the first film (A New Hope)
+        style={styles.headerImage}
+        resizeMode="cover"
+      />
       <TextInput
         style={styles.input}
         placeholder="Search Films..."
@@ -185,5 +190,11 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingBottom: 20, // Add some space at the bottom
+  },
+  headerImage: {
+    width: '100%',
+    height: 180,
+    borderRadius: 12,
+    marginBottom: 16,
   },
 });
