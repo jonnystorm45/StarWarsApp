@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const fetchData = async (url: string) => {
   try {
@@ -34,6 +35,30 @@ const FilmsScreen = () => {
     setSearchTerm('');
   };
 
+  const renderItem = ({ item }: any) => {
+    return (
+      <Swipeable
+        renderRightActions={() => (
+          <View style={styles.swipeAction}>
+            <TouchableOpacity
+              onPress={() => {
+                setModalText(item.title);
+                setModalVisible(true);
+              }}
+              style={styles.swipeButton}
+            >
+              <Text style={styles.swipeButtonText}>Show Modal</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      >
+        <View style={styles.itemContainer}>
+          <Text style={styles.itemText}>{item.title}</Text>
+        </View>
+      </Swipeable>
+    );
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" color="#FFD700" />;
   }
@@ -48,15 +73,15 @@ const FilmsScreen = () => {
         onChangeText={setSearchTerm}
         onSubmitEditing={handleSearchSubmit}
       />
-      <FlatList
-        data={films}
-        keyExtractor={(item) => item.title}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemText}>{item.title}</Text>
-          </View>
-        )}
-      />
+      
+      {/* Wrap FlatList in ScrollView */}
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <FlatList
+          data={films}
+          keyExtractor={(item) => item.title}
+          renderItem={renderItem}
+        />
+      </ScrollView>
 
       {/* Modal for search */}
       <Modal visible={modalVisible} transparent={true} animationType="fade">
@@ -140,5 +165,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000', // Black text for contrast on gold
     fontWeight: 'bold',
+  },
+  swipeAction: {
+    backgroundColor: '#FF4500', // Swipe button background color (Orange-red for action)
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: 100,
+    borderRadius: 8,
+  },
+  swipeButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  swipeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  scrollView: {
+    paddingBottom: 20, // Add some space at the bottom
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
@@ -48,16 +48,18 @@ const PlanetsScreen = () => {
         onChangeText={setSearchTerm}
         onSubmitEditing={handleSearchSubmit}
       />
-      <FlatList
-        data={planets}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemText}>{item.name}</Text>
-          </View>
-        )}
-      />
-      
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <FlatList
+          data={planets}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemText}>{item.name}</Text>
+            </View>
+          )}
+        />
+      </ScrollView>
+
       {/* Modal for search */}
       <Modal visible={modalVisible} transparent={true} animationType="fade">
         <View style={styles.modalOverlay}>
@@ -92,6 +94,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#1c1c1c', // Dark input background
     fontSize: 16,
     color: '#FFFFFF', // White text
+  },
+  scrollContainer: {
+    paddingBottom: 20,
   },
   itemContainer: {
     backgroundColor: '#333', // Dark background for items
