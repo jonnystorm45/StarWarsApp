@@ -9,6 +9,7 @@ import {
   TextInput,
   Button,
   Modal,
+  Image,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -18,6 +19,18 @@ import LottieView from 'lottie-react-native';
 import 'react-native-reanimated';
 
 
+
+
+const StarWarsHeaderImage = () => (
+  <View style={styles.container}>
+    <Image
+      source={{
+        uri: 'https://th.bing.com/th/id/OIP.2IMv8eCBnqykVZ_y6iVzdAHaEK?w=306&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+      }}
+      style={styles.image}
+    />
+  </View>
+);
 
 // Reusable fetch function
 const fetchData = async (url: string) => {
@@ -99,20 +112,32 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 const TabNavigator = () => (
-    <Tab.Navigator>
-      <Tab.Screen name="Planets" component={PlanetsScreen} />
-      <Tab.Screen name="Spaceships" component={SpaceshipsScreen} />
-      <Tab.Screen name="Films" component={FilmsScreen} />
-    </Tab.Navigator>
+  <Tab.Navigator
+    screenOptions={{
+      headerTitle: () => <StarWarsHeaderImage />,
+      headerStyle: { backgroundColor: '#000' },
+    }}
+  >
+    <Tab.Screen name="Planets" component={PlanetsScreen} />
+    <Tab.Screen name="Spaceships" component={SpaceshipsScreen} />
+    <Tab.Screen name="Films" component={FilmsScreen} />
+  </Tab.Navigator>
 );
 
+
 const DrawerNavigator = () => (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Planets" component={PlanetsScreen} />
-      <Drawer.Screen name="Spaceships" component={SpaceshipsScreen} />
-      <Drawer.Screen name="Films" component={FilmsScreen} />
-    </Drawer.Navigator>
+  <Drawer.Navigator
+    screenOptions={{
+      headerTitle: () => <StarWarsHeaderImage />,
+      headerStyle: { backgroundColor: '#000' },
+    }}
+  >
+    <Drawer.Screen name="Planets" component={PlanetsScreen} />
+    <Drawer.Screen name="Spaceships" component={SpaceshipsScreen} />
+    <Drawer.Screen name="Films" component={FilmsScreen} />
+  </Drawer.Navigator>
 );
+
 
 // App Entry
 export default function App() {
@@ -121,6 +146,16 @@ export default function App() {
 
 // Styles
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 25, // Adjust to your preference
+  },
+  image: {
+    width: 450,
+    height: 150,
+  },
   screenContainer: {
     flex: 1,
     padding: 16,

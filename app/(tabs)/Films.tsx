@@ -69,7 +69,7 @@ const FilmsScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://starwars-visualguide.com/assets/img/films/1.jpg' }} // Image for the first film (A New Hope)
+        source={{ uri: 'https://th.bing.com/th/id/OIP.iUYJI7aGujIMxZAasNe46QHaJ4?w=208&h=277&c=7&r=0&o=5&dpr=1.3&pid=1.7' }} // Image for the first film (A New Hope)
         style={styles.headerImage}
         resizeMode="cover"
       />
