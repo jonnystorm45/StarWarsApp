@@ -23,7 +23,7 @@ const PlanetsScreen = () => {
   const [modalText, setModalText] = useState('');
 
   useEffect(() => {
-    fetchData('https://swapi.dev/api/planets/')
+    fetchData('https://swapi.py4e.com/api/planets/')
       .then((data) => {
         setPlanets(data);
         setLoading(false);

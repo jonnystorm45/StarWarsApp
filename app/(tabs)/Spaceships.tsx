@@ -26,7 +26,7 @@ const SpaceshipsScreen = () => {
   const [modalText, setModalText] = useState('');
 
   useEffect(() => {
-    fetchData('https://swapi.dev/api/starships/')
+    fetchData('https://swapi.py4e.com/api/starships/')
       .then((data) => {
         setSpaceships(data);
         setLoading(false);

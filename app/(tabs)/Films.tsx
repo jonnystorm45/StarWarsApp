@@ -25,7 +25,7 @@ const FilmsScreen = () => {
   const [modalText, setModalText] = useState('');
 
   useEffect(() => {
-    fetchData('https://swapi.dev/api/films/')
+    fetchData('https://swapi.py4e.com/api/films/')
       .then((data) => {
         setFilms(data);
         setLoading(false);
