@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import 'react-native-reanimated';
+
+
 
 // Screen components
 const PlanetsScreen = () => (

@@ -14,6 +14,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import axios from 'axios';
+import LottieView from 'lottie-react-native';
+import 'react-native-reanimated';
+
+
 
 // Reusable fetch function
 const fetchData = async (url: string) => {

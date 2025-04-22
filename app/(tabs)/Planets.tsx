@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import LottieView from 'lottie-react-native';
+import { SearchModal } from '../../components/SearchModal';
+
 
 const fetchData = async (url: string) => {
   try {
@@ -61,16 +64,11 @@ const PlanetsScreen = () => {
       </ScrollView>
 
       {/* Modal for search */}
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>You searched for: {modalText}</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <SearchModal
+        visible={modalVisible}
+        text={modalText}
+        onClose={() => setModalVisible(false)}
+      />
     </View>
   );
 };

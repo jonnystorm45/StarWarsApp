@@ -11,6 +11,9 @@
     "ios": {
       "supportsTablet": true
     },
+      "extra": {
+      "expo-router": {
+          "appRoot": "./app" },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -38,4 +41,5 @@
       "typedRoutes": true
     }
   }
+}
 }
