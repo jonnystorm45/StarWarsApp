@@ -17,6 +17,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import 'react-native-reanimated';
+import NetInfo from '@react-native-community/netinfo';
+
 
 
 
@@ -50,13 +52,27 @@ const createScreen = (endpoint: string, itemKey: 'name' | 'title') => {
     const [loading, setLoading] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const [isConnected, setIsConnected] = useState(true); // New state
 
     useEffect(() => {
-      fetchData(endpoint).then((results) => {
-        setData(results);
-        setLoading(false);
+      const unsubscribe = NetInfo.addEventListener(state => {
+        // Ensure isConnected is not null
+        setIsConnected(state.isConnected ?? false);
       });
+    
+      return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+      if (isConnected) {
+        fetchData(endpoint).then((results) => {
+          setData(results);
+          setLoading(false);
+        });
+      } else {
+        setLoading(false);
+      }
+    }, [isConnected]);
 
     const handleSearch = () => {
       if (searchText.trim() !== '') {
@@ -66,6 +82,16 @@ const createScreen = (endpoint: string, itemKey: 'name' | 'title') => {
 
     if (loading) {
       return <ActivityIndicator size="large" color="#FFD700" />;
+    }
+
+    if (!isConnected) {
+      return (
+        <View style={styles.screenContainer}>
+          <Text style={styles.offlineText}>
+            You are currently offline. Please check your internet connection.
+          </Text>
+        </View>
+      );
     }
 
     return (
@@ -101,6 +127,7 @@ const createScreen = (endpoint: string, itemKey: 'name' | 'title') => {
     );
   };
 };
+
 
 // Screens
 const PlanetsScreen = createScreen('https://swapi.dev/api/planets/', 'name');
@@ -210,4 +237,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#111', // Dark background for the tab bar
     borderTopColor: '#FFD700', // Gold accents on the tab bar
   },
+  offlineText: {
+    fontSize: 18,
+    color: '#FF6347', // A noticeable alert color (Tomato)
+    textAlign: 'center',
+    marginTop: 50,
+    fontWeight: 'bold',
+  }  
 });
