@@ -6,7 +6,6 @@ import { Swipeable } from 'react-native-gesture-handler';
 import LottieView from 'lottie-react-native';
 import { SearchModal } from '../../components/SearchModal';
 
-
 const fetchData = async (url: string) => {
   try {
     const response = await axios.get(url);
@@ -19,6 +18,7 @@ const fetchData = async (url: string) => {
 
 const FilmsScreen = () => {
   const [films, setFilms] = useState<any[]>([]);
+  const [filteredFilms, setFilteredFilms] = useState<any[]>([]); // State for filtered films
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,14 +28,29 @@ const FilmsScreen = () => {
     fetchData('https://swapi.py4e.com/api/films/')
       .then((data) => {
         setFilms(data);
+        setFilteredFilms(data); // Initially set filteredFilms to all films
         setLoading(false);
       });
   }, []);
 
+  const handleSearchTermChange = (text: string) => {
+    setSearchTerm(text);
+
+    // Filter films based on search term
+    if (text) {
+      const filtered = films.filter((film) =>
+        film.title.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredFilms(filtered);
+    } else {
+      setFilteredFilms(films); // Reset the filtered films when search term is cleared
+    }
+  };
+
   const handleSearchSubmit = () => {
     setModalText(searchTerm);
     setModalVisible(true);
-    setSearchTerm('');
+    setSearchTerm(''); // Optionally clear search term after submit
   };
 
   const renderItem = ({ item }: any) => {
@@ -69,7 +84,9 @@ const FilmsScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://th.bing.com/th/id/OIP.iUYJI7aGujIMxZAasNe46QHaJ4?w=208&h=277&c=7&r=0&o=5&dpr=1.3&pid=1.7' }} // Image for the first film (A New Hope)
+        source={{
+          uri: 'https://th.bing.com/th/id/OIP.iUYJI7aGujIMxZAasNe46QHaJ4?w=208&h=277&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+        }} // Image for the first film (A New Hope)
         style={styles.headerImage}
         resizeMode="cover"
       />
@@ -78,14 +95,14 @@ const FilmsScreen = () => {
         placeholder="Search Films..."
         placeholderTextColor="#fff"
         value={searchTerm}
-        onChangeText={setSearchTerm}
+        onChangeText={handleSearchTermChange} // Update search term
         onSubmitEditing={handleSearchSubmit}
       />
       
       {/* Wrap FlatList in ScrollView */}
       <ScrollView contentContainerStyle={styles.scrollView}>
         <FlatList
-          data={films}
+          data={filteredFilms} // Use filtered films data here
           keyExtractor={(item) => item.title}
           renderItem={renderItem}
         />
@@ -198,3 +215,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 });
+
+
