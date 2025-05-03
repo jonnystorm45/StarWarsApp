@@ -5,6 +5,10 @@ import axios from 'axios';
 import { Swipeable } from 'react-native-gesture-handler';
 import LottieView from 'lottie-react-native';
 import { SearchModal } from '../../components/SearchModal';
+import { useRouter } from 'expo-router';
+
+const router = useRouter();
+
 
 const fetchData = async (url: string) => {
   try {
@@ -54,19 +58,22 @@ const FilmsScreen = () => {
   };
 
   const renderItem = ({ item }: any) => {
+    const id = item.url.match(/\/api\/films\/(\d+)\//)?.[1]; // Extract ID from URL
+  
     return (
       <Swipeable
         renderRightActions={() => (
           <View style={styles.swipeAction}>
             <TouchableOpacity
-              onPress={() => {
-                setModalText(item.title);
-                setModalVisible(true);
-              }}
-              style={styles.swipeButton}
-            >
-              <Text style={styles.swipeButtonText}>Show Modal</Text>
-            </TouchableOpacity>
+  onPress={() => {
+    router.push(
+      `/films/${id}?title=${encodeURIComponent(item.title)}&director=${encodeURIComponent(item.director)}&producer=${encodeURIComponent(item.producer)}&release_date=${encodeURIComponent(item.release_date)}&opening_crawl=${encodeURIComponent(item.opening_crawl)}`
+    );
+  }}
+  style={styles.swipeButton}
+>
+  <Text style={styles.swipeButtonText}>Details</Text>
+</TouchableOpacity>
           </View>
         )}
       >
